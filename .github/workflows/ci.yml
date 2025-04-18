@@ -1,0 +1,33 @@
+name: Continuous Integration
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  node-application-build:
+    concurrency: ci-${{ github.ref }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 23
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Formatter
+        run: npm run format-ci
+
+      - name: Run Linter
+        run: npm run lint-ci
+
+      - name: Build the Project
+        run: npm run build
